@@ -82,6 +82,13 @@ class JwtServices {
         return await this.dao.changeRole(idUser)
     }
 
+    async lastConnection(email, date){
+        return await this.lastConnection(email, date)
+    }
+
+    async updateUserDocuments(userId, files) {
+        return await this.dao.updateUserDocuments(userId, name, files)
+    }
 }
 
 module.exports = { JwtServices }

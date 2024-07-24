@@ -7,7 +7,7 @@ class UserDTO {
         this.age = user.age
         this.email= user.email    
         this.cart = user.cart
-        this.rol = user.rol
+        this.rol = user.rol        
     }
 }
 

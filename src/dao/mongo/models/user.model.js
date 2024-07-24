@@ -15,7 +15,25 @@ const schema = new mongoose.Schema({
     },
     rol: {
         type: String,
-        default: "user"  // puede ser user, admin o premium
+        default: 'user'  // puede ser user, admin o premium
+    },
+    status: { 
+        type: String, 
+        default: 'empty' 
+    },
+    last_connection: String,
+    documents: {
+        type: [
+            {
+                name: {
+                    type: String
+                },
+                reference: {
+                    type: String
+                },
+            }
+        ],
+        default: []
     }
 })
 

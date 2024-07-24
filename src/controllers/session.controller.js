@@ -12,12 +12,15 @@ class SessionController {
         this.service = new JwtServices(new UserDAO())
     }
 
-    login(req, res) {
+    async login(req, res) {
         try {
             if (!req.user) return res.sendUserError('Invalid credentials!')
             //if (!req.user) return res.status(400).send('Invalid credentials!')
             // crear nueva sesión si el usuario existe   
-            //console.log(req.user)
+            //console.log(req.user)            
+            const { email } = req.body
+            const date = new Date().toLocaleString()
+            await this.service.lastConnection(email, date)
             req.session.user = new UserDTO(req.user)
             //req.session.user = { _id: req.user._id, first_name: req.user.first_name, last_name: req.user.last_name, age: req.user.age, email: req.user.email, rol: req.user.rol, cart: req.user.cart }
             //return res.redirect('/products')
@@ -37,8 +40,11 @@ class SessionController {
 
     logout(req, res) {
         try {
-            req.session.destroy(_ => {
+            const { email } = req.body
+            req.session.destroy(async _ => {
                 //res.redirect('/')
+                const date = new Date().toLocaleString()
+                await this.service.lastConnection(email, date)
                 res.sendSuccess(req.user._id)
             })
         }
@@ -177,6 +183,17 @@ class SessionController {
         }
     }
 
+    async uploadDocuments(req, res) {
+        const idUser = req.params.uid
+        const {name, type} = req.body
+        console.log(req.body)
+        const files = req.files
+        console.log(files)
+        const user = await this.service.uploadDocuments(idUser, name, files)
+        req.logger.info('Documentación actualizada exitosamente')
+        res.sendCreatedSuccess('Documento actualizado de forma correcta')
+        //res.status(201).json({ message: 'Documento actualizado de forma correcta' })
+    }
 }
 
 module.exports = { SessionController }

@@ -81,9 +81,9 @@ class UserDAO {
     }
 
     async validarPassRepetidos(email, pass) {
-        try {         
+        try {
             //const user = await this.findByEmail({ email })
-            const user = await UserModel.findOne({email})     
+            const user = await UserModel.findOne({ email })
             return hashPassword(pass) == user.password // misma contraseña que la anterior 
             //return isValidPassword(pass, user.password) 
         }
@@ -97,8 +97,18 @@ class UserDAO {
         try {
             const user = await this.getUserById(idUser)
             if (user) {
-                if (user.rol == 'user')
+                const requiredDocuments = ['identificacion', 'comprobanteDomicilio', 'comprobanteCuenta']
+                const hasRequiredDocuments = requiredDocuments.every(doc => user.documents.some(d => d.name === doc))
+                // Para cada documento en requiredDocuments, se ejecuta una función que verifica si hay al menos un documento en user.documents que tenga un name igual al nombre del documento actual (doc)
+                if (user.rol == 'user') {
+                    if (!hasRequiredDocuments) {
+                        return res.sendUserError('El usuario  no ha terminado de procesar su solicitud')
+                        // return res.status(400).json({
+                        //     error: 'El usuario  no ha terminado de procesar su solicitud'
+                        // })
+                    }
                     user.rol = 'premium'
+                }
                 else if (user.rol == 'premium')
                     user.rol = 'user'
                 else
@@ -117,6 +127,36 @@ class UserDAO {
         }
     }
 
+    async lastConnection(email, date) {
+        return await UserModel.updateOne(email, { $set: { last_connection: date } })
+    }
+
+    async updateUserDocuments(userId, name, files) {
+        const user = await this.getUserById(userId)
+
+        const fileLink = files ? files.path : null // obtengo el enlace del archivo
+
+        if (fileLink) {
+            user.documents.push({ name, reference: fileLink })
+        }
+
+        user.status = "uploaded"
+
+        const result = await this.updateUser(user)
+
+        if (result) {
+            return res.sendSuccess(`${user} actualizado`)
+            // res.status(200).json({
+            //     message: `${user} actualizado`
+            // })
+        } else {
+            return res.sendUserError('Se produjo un error al intentar actualizar el usuario')
+            // res.status(400).json({
+            //     error: 'Se produjo un error al intentar actualizar el usuario'
+            // })
+        }
+
+    }
 }
 
 module.exports = { UserDAO }
