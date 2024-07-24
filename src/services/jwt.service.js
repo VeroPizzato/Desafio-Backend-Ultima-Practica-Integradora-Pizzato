@@ -78,13 +78,13 @@ class JwtServices {
         return await this.dao.getUserByCartId(idCart)
     }
 
-    async changeRole(idUser) {
-        return await this.dao.changeRole(idUser)
-    }
-
     async lastConnection(email, date){
         return await this.lastConnection(email, date)
     }
+
+    async changeRole(idUser) {
+        return await this.dao.changeRole(idUser)
+    }   
 
     async updateUserDocuments(userId, files) {
         return await this.dao.updateUserDocuments(userId, files)
