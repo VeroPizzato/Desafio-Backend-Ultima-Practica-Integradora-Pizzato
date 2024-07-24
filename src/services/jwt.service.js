@@ -79,7 +79,7 @@ class JwtServices {
     }
 
     async lastConnection(email, date){
-        return await this.lastConnection(email, date)
+        return await this.dao.lastConnection(email, date)
     }
 
     async changeRole(idUser) {

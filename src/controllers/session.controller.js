@@ -41,11 +41,11 @@ class SessionController {
     logout(req, res) {
         try {
             const { email } = req.body
-            req.session.destroy(async _ => {
-                //res.redirect('/')
+            req.session.destroy(async _ => {                
                 const date = new Date().toLocaleString()
                 await this.service.lastConnection(email, date)
-                res.sendSuccess(req.user._id)
+                //res.sendSuccess(req.user._id)
+                res.redirect('/')
             })
         }
         catch (err) {
