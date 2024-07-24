@@ -4,10 +4,7 @@ const multer = require('multer')
 // destination debe ser una función que recibe req (request), file (archivo luego de ser procesado por multer) y cb (callback que debe llamarse para indicar el directorio del archivo)
 // filename, debe ser una función similar a la anterior, pero nos permitirá indicar el nombre del archivo cuando se haya cargado
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-
-        console.log('Tipo de archivo:', req.body.type)
-
+    destination: function (req, file, cb) {        
         if (req.body.type == 'profile') {
             cb(null, `${__dirName}/../../public/profiles`)
         } else if (req.body.type == 'product') {
@@ -16,10 +13,7 @@ const storage = multer.diskStorage({
             cb(null, `${__dirName}/../../public/documents`)
         }  
     },
-    filename: function (req, file, cb) {
-
-        console.log(file)
-        
+    filename: function (req, file, cb) {      
         cb(null, `${Date.now()}-${file.originalname}`) 
     }
 })

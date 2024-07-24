@@ -44,7 +44,7 @@ class SessionRouter extends Router {
         
         this.put('/premium/:uid', withController((controller, req, res) => controller.changeRole(req, res)))
 
-        this.post('/:uid/documents', uploader.single('file'), withController((controller, req, res) => controller.uploadDocuments(req, res)))
+        this.post('/:uid/documents', uploader.array('documents'), withController((controller, req, res) => controller.uploadDocuments(req, res)))
     }
 }
 

@@ -185,11 +185,9 @@ class SessionController {
 
     async uploadDocuments(req, res) {
         const idUser = req.params.uid
-        const {name, type} = req.body
-        console.log(req.body)
-        const files = req.files
-        console.log(files)
-        const user = await this.service.uploadDocuments(idUser, name, files)
+        //const {name, type} = req.body        
+        const files = req.files        
+        const user = await this.service.uploadDocuments(idUser, files)
         req.logger.info('Documentación actualizada exitosamente')
         res.sendCreatedSuccess('Documento actualizado de forma correcta')
         //res.status(201).json({ message: 'Documento actualizado de forma correcta' })

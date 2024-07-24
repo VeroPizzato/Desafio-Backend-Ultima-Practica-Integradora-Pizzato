@@ -1,5 +1,5 @@
 const UserModel = require("./models/user.model")
-const { hashPassword, isValidPassword } = require('../../utils/hashing')
+const { hashPassword } = require('../../utils/hashing')
 
 class UserDAO {
 
@@ -84,8 +84,7 @@ class UserDAO {
         try {
             //const user = await this.findByEmail({ email })
             const user = await UserModel.findOne({ email })
-            return hashPassword(pass) == user.password // misma contraseña que la anterior 
-            //return isValidPassword(pass, user.password) 
+            return hashPassword(pass) == user.password // misma contraseña que la anterior             
         }
         catch (err) {
             console.error(err)
@@ -102,9 +101,9 @@ class UserDAO {
                 // Para cada documento en requiredDocuments, se ejecuta una función que verifica si hay al menos un documento en user.documents que tenga un name igual al nombre del documento actual (doc)
                 if (user.rol == 'user') {
                     if (!hasRequiredDocuments) {
-                        return res.sendUserError('El usuario  no ha terminado de procesar su solicitud')
+                        return res.sendUserError('El usuario  no ha terminado de procesar su documentacion')
                         // return res.status(400).json({
-                        //     error: 'El usuario  no ha terminado de procesar su solicitud'
+                        //     error: 'El usuario  no ha terminado de procesar su documentacion'
                         // })
                     }
                     user.rol = 'premium'
@@ -131,19 +130,20 @@ class UserDAO {
         return await UserModel.updateOne(email, { $set: { last_connection: date } })
     }
 
-    async updateUserDocuments(userId, name, files) {
+    async updateUserDocuments(userId, files) {
         const user = await this.getUserById(userId)
+        if (!user) throw new Error('Usuario no encontrado')
 
-        const fileLink = files ? files.path : null // obtengo el enlace del archivo
+        files.forEach(file => {
+            const document = {
+                name: file.originalname,
+                reference: file.path
+            };
+            user.documents.push(document)
+        })
 
-        if (fileLink) {
-            user.documents.push({ name, reference: fileLink })
-        }
-
-        user.status = "uploaded"
-
-        const result = await this.updateUser(user)
-
+        user.status = 'uploaded'
+        const result = await UserModel.updateOne({ _id: userId }, { $set: { documents: user.documents, status: user.status } })
         if (result) {
             return res.sendSuccess(`${user} actualizado`)
             // res.status(200).json({
@@ -155,7 +155,6 @@ class UserDAO {
             //     error: 'Se produjo un error al intentar actualizar el usuario'
             // })
         }
-
     }
 }
 

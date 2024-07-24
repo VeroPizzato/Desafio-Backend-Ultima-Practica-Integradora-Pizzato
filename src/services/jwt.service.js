@@ -87,7 +87,7 @@ class JwtServices {
     }
 
     async updateUserDocuments(userId, files) {
-        return await this.dao.updateUserDocuments(userId, name, files)
+        return await this.dao.updateUserDocuments(userId, files)
     }
 }
 
