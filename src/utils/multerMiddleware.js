@@ -9,11 +9,11 @@ const storage = multer.diskStorage({
         console.log('Tipo de archivo:', req.body.type)
 
         if (req.body.type == 'profile') {
-            cb(null, `${__dirName}/public/profiles`)
+            cb(null, `${__dirName}/../../public/profiles`)
         } else if (req.body.type == 'product') {
-            cb(null, `${__dirName}/public/products`)
+            cb(null, `${__dirName}/../../public/products`)
         } else if (req.body.type == 'document') {
-            cb(null, `${__dirName}/public/documents`)
+            cb(null, `${__dirName}/../../public/documents`)
         }  
     },
     filename: function (req, file, cb) {
@@ -24,3 +24,5 @@ const storage = multer.diskStorage({
 // instanciamos el uploader. Idealmente, esto deberíamos tenerlo en un archivo separado, para poder
 // reutilizarlo en distintos routers
 const uploader = multer({ storage })
+
+module.exports = uploader
