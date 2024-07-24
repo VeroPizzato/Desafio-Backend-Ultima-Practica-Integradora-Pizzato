@@ -5,11 +5,11 @@ const multer = require('multer')
 // filename, debe ser una función similar a la anterior, pero nos permitirá indicar el nombre del archivo cuando se haya cargado
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {        
-        if (req.body.type == 'profile') {
+        if (req.body.type === 'profile') {
             cb(null, `${__dirName}/../../public/profiles`)
-        } else if (req.body.type == 'product') {
+        } else if (req.body.type === 'product') {
             cb(null, `${__dirName}/../../public/products`)
-        } else if (req.body.type == 'document') {
+        } else if (req.body.type === 'document') {
             cb(null, `${__dirName}/../../public/documents`)
         }  
     },
