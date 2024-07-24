@@ -1,0 +1,255 @@
+paths:
+  /api/products/:
+    get:
+      summary: Devuelve todos los productos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Operación completada con éxito, los productos fueron obtenidos correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Product'        
+        "500":
+          description: Error en el servidor 
+    post:
+      summary: Crear un nuevo producto, insertar un nuevo producto en la base de datos
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/addProduct'
+      responses:
+        "201":
+          description: Operación exitosa, el producto fue agregado correctamente
+          content:
+            application/json:
+              schema:                
+                $ref: '#components/schemas/Product'
+        "400":
+          description: Producto inválido
+        "401":
+          description: Usuario no logueado
+        "403":
+          description: Usuario no autorizado
+        "500":
+          description: Error en el servidor
+
+  /api/products/{pid}:
+    get:
+      summary: Devuelve un producto a partir de su ID
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Operación exitosa, devuelve el producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Product"
+        "404":
+          description: Producto no encontrado en el sistema
+        "500":
+          description: Error en el servidor
+    put:
+      summary: Actualiza un producto a partir de su ID
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        requiered: true
+        description: ID del producto a actualizar
+        schema:
+          $type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/updateProduct'
+      responses:
+        "200":
+          description: El producto fue actualizado correctamente
+          content:
+            application/json:
+              schema:                
+                $ref: '#components/schemas/Product'
+        "401":
+          description: Usuario no logueado
+        "403":
+          description: Usuario no autorizado
+        "500":
+          description: Error en el servidor
+    delete:
+      summary: Borra un producto a partir de su ID
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        requiered: true
+        description: ID del producto a borrar
+        schema:
+          $type: string
+      responses:
+        "200":
+          description: El producto fue eliminado satisfactoriamente
+          content:
+            application/json:
+              schema:                
+                $ref: '#components/schemas/Product'
+        "401":
+          description: Usuario no logueado
+        "403":
+          description: Usuario no autorizado
+        "500":
+          description: Error en el servidor
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID del producto autogenerado por Mongo
+        title:
+          type: string
+          description: Titulo del Producto
+        description:
+          type: string
+          description: Descripción detallada del Producto
+        price:
+          type: number
+          description: Precio del Producto
+        thumbnail:
+          type: array
+          description: Listado de paths de las fotos del Producto
+        code:
+          type: string
+          description: Código Interno del Producto, este campo debe ser único
+        stock:
+          type: number
+          description: Stock Actual del Producto
+        status:
+          type: boolean
+          description: Estado del Producto
+        category:
+          type: string
+          description: Categoría del Producto       
+        owner:
+          type: string
+          description: Creador del Producto, por default es el Administrador       
+      example:
+        _id: "660c2e59eae06b4c3ff95029"
+        title: MONITOR 32 LED SAMSUNG LS32AG550ELX CURVO 165HZ
+        description: Una frecuencia de actualización más rápida actualiza las imágenes de la pantalla con mayor frecuencia cada segundo, lo que permite un juego más fluido que se mantiene al día incluso con los jugadores más rápidos. La frecuencia de actualización de 165 Hz elimina el retraso y el desenfoque de movimiento para un juego emocionante con una acción ultra suave. Los píxeles de la pantalla cambian de color con una respuesta casi instantánea, lo que permite que la acción de ritmo rápido fluya con la precisión del mundo real. Su rendimiento en pantalla es tan rápido como tus propios reflejos. Jugá por más tiempo. El modo Eye Saver minimiza la luz azul lo suficiente como para mantener los ojos relajados y cómodos cuando se juega durante períodos prolongados. La tecnología Flicker Free elimina continuamente el cansancio e irritante parpadeo de la pantalla para que puedas concentrarte durante más tiempo con menos distracciones o fatiga visual.
+        price: 398999
+        thumbnail: [
+          "images/monitor_samsung.png"
+        ]
+        code: MS550
+        stock: 4       
+        status: true
+        category: monitor
+        owner: admin     
+  requestBodies:
+    addProduct:
+      type: string
+      properties: 
+        title:
+          type: string
+          description: Titulo del Producto
+        description:
+          type: string
+          description: Descripción detallada del Producto
+        price:
+          type: number
+          description: Precio del Producto
+        thumbnail:
+          type: array
+          description: Listado de paths de las fotos del Producto
+        code:
+          type: string
+          description: Código Interno del Producto, este campo debe ser único
+        stock:
+          type: number
+          description: Stock Actual del Producto
+        status:
+          type: boolean
+          description: Estado del Producto
+        category:
+          type: string
+          description: Categoría del Producto       
+        owner:
+          type: string
+          description: Creador del Producto, por default es el Administrador  
+      example:
+        title: Memoria RAM ValueRAM color verde 8GB 1 Kingston KVR26N19S8/8
+        description: Kingston es sinónimo de trayectoria y excelencia en el mercado tecnológico, principalmente en lo que a memorias ram refiere. Mejorar la capacidad y rendimiento de tu computadora va a ser fácil con la incorporación de una memoria de la línea ValueRAM, que cubrirá todas tus necesidades. Dispará la productividad y ejecutá tus programas y aplicaciones con mayor velocidad.
+        price: 31499
+        thumbnail: [
+          "https://m.media-amazon.com/images/I/71JrMmfWzoL._AC_SL1500_.jpg"
+        ]
+        code: KVR8
+        stock: 12        
+        status: true
+        category: componente
+        owner: admin  
+    updateProduct:
+      type: string
+      properties: 
+        title:
+          type: string
+          description: Titulo del Producto
+        description:
+          type: string
+          description: Descripción detallada del Producto
+        price:
+          type: number
+          description: Precio del Producto
+        thumbnail:
+          type: array
+          description: Listado de paths de las fotos del Producto
+        code:
+          type: string
+          description: Código Interno del Producto, este campo debe ser único
+        stock:
+          type: number
+          description: Stock Actual del Producto
+        status:
+          type: boolean
+          description: Estado del Producto
+        category:
+          type: string
+          description: Categoría del Producto       
+        owner:
+          type: string
+          description: Creador del Producto, por default es el Administrador
+      example:
+        title: Notebook GIGABYTE G5 KE Intel i5-12500H | RTX 3060 | 16GB DDR4 | 512GB NVMe | 15” FHD 144Hz
+        description: La computadora portátil para juegos GIGABYTE trae nuevos elementos de juego de tendencias futuras, combinados con un rendimiento poderoso de próxima generación.
+        price: 125999
+        thumbnail: [
+          "images/notebook_gigabyte.png"
+        ]
+        code: NG12500
+        stock: 10       
+        status: true
+        category: notebook
+        owner: admin  
+  
