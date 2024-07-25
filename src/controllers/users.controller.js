@@ -3,7 +3,7 @@ const { User: UserDAO } = require('../dao')
 
 class UsersController {
 
-    constructor() {
+    constructor() {        
         this.service = new UsersServices(new UserDAO())
     }
 
@@ -24,7 +24,7 @@ class UsersController {
         }
     }
 
-    async uploadDocuments(req, res) {
+    async uploadDocuments(req, res) {       
         const idUser = req.params.uid
         //const {name, type} = req.body        
         const files = req.files

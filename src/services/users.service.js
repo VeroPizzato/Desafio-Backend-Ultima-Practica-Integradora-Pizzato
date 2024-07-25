@@ -8,8 +8,8 @@ class UsersServices {
         return await this.dao.changeRole(idUser)
     }
 
-    async updateUserDocuments(userId, files) {
-        return await this.dao.updateUserDocuments(userId, files)
+    async uploadDocuments(userId, files) {
+        return await this.dao.uploadDocuments(userId, files)
     }
 }
 

@@ -130,9 +130,9 @@ class UserDAO {
         }
     }
 
-    async updateUserDocuments(userId, files) {
-        try {
-            const user = await this.getUserById(userId)
+    async uploadDocuments(userId, files) {
+        try {               
+            const user = await this.getUserById(userId)           
             //if (!user) return res.status(404).send('Usuario no encontrado')
             if (!user) throw new Error('Usuario no encontrado')
 
@@ -147,7 +147,8 @@ class UserDAO {
             user.status = 'uploaded'
             //user.status = 'updated'
             const result = await UserModel.updateOne({ _id: userId }, { $set: { documents: user.documents, status: user.status } })
-            if (result) {
+            console.log(result)
+            if (result) {            
                 return res.sendSuccess(`${user} actualizado`)
                 //res.status(200).send('Documentos subidos y estado del usuario actualizado')
                 // res.status(200).json({
