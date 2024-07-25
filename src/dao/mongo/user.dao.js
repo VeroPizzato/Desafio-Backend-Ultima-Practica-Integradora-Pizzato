@@ -101,14 +101,13 @@ class UserDAO {
             const user = await this.getUserById(idUser)
             if (user) {
                 const requiredDocuments = ['identificacion', 'comprobanteDomicilio', 'comprobanteCuenta']
-                const hasRequiredDocuments = requiredDocuments.every(doc => user.documents.some(d => d.name === doc))
+                const hasRequiredDocuments = requiredDocuments.every(doc => user.documents.some(d => (d.name).includes(doc)))
+                //const hasRequiredDocuments = requiredDocuments.every(doc => user.documents.some(d => d.name === doc))
                 // Para cada documento en requiredDocuments, se ejecuta una función que verifica si hay al menos un documento en user.documents que tenga un name igual al nombre del documento actual (doc)
                 if (user.rol == 'user') {
                     if (!hasRequiredDocuments) {
-                        return res.sendUserError('El usuario  no ha terminado de procesar su documentacion')
-                        // return res.status(400).json({
-                        //     error: 'El usuario  no ha terminado de procesar su documentacion'
-                        // })
+                        console.error('El usuario no ha terminado de procesar su documentacion')
+                        return false                        
                     }
                     user.rol = 'premium'
                 }
@@ -132,10 +131,12 @@ class UserDAO {
 
     async uploadDocuments(userId, files) {
         try {               
-            const user = await this.getUserById(userId)           
-            //if (!user) return res.status(404).send('Usuario no encontrado')
-            if (!user) throw new Error('Usuario no encontrado')
-
+            const user = await this.getUserById(userId)  
+            if (!user){
+                console.error('Usuario no encontrado')
+                return null
+            }
+            //if (!user) throw new Error('Usuario no encontrado')
             files.forEach(file => {
                 const document = {
                     name: file.originalname,
@@ -143,27 +144,21 @@ class UserDAO {
                 };
                 user.documents.push(document)
             })
-
             user.status = 'uploaded'
             //user.status = 'updated'
             const result = await UserModel.updateOne({ _id: userId }, { $set: { documents: user.documents, status: user.status } })
             console.log(user)
-            if (result) {            
-                return res.sendSuccess(`${user} actualizado`)
-                //res.status(200).send('Documentos subidos y estado del usuario actualizado')
-                // res.status(200).json({
-                //     message: `${user} actualizado`
-                // })
+            if (result) {  
+                console.error('Documentos subidos y estado del usuario actualizado')          
+                return user               
             } else {
-                return res.sendUserError('Se produjo un error al intentar actualizar el usuario')
-                // res.status(400).json({
-                //     error: 'Se produjo un error al intentar actualizar el usuario'
-                // })
+                console.error('Se produjo un error al intentar actualizar el usuario')
+                return null               
             }
         }
-        catch (err) {         
-            return res.sendServerError(err)
-            //res.status(500).send('Error al subir los documentos: ' + err.message)
+        catch (err) { 
+            console.error(err) 
+            return null                         
         }
     }
 }
