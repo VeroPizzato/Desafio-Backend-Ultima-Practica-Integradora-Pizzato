@@ -95,7 +95,7 @@ class UserDAO {
     async lastConnection(email, date) {
         return await UserModel.updateOne(email, { $set: { last_connection: date } })
     }
-    
+
     async changeRole(idUser) {
         try {
             const user = await this.getUserById(idUser)
@@ -132,7 +132,8 @@ class UserDAO {
 
     async updateUserDocuments(userId, files) {
         const user = await this.getUserById(userId)
-        if (!user) throw new Error('Usuario no encontrado')
+        //if (!user) return res.status(404).send('Usuario no encontrado')
+        if (!user) throw new Error('Usuario no encontrado')        
 
         files.forEach(file => {
             const document = {
