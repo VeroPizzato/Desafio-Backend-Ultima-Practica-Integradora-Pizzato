@@ -20,6 +20,9 @@ const productsRouter = new ProductsRouter().getRouter()
 const SessionRouter = require('./routes/session.router')
 const sessionRouter = new SessionRouter().getRouter()
 
+const UsersRouter = require('./routes/users.router')
+const usersRouter = new UsersRouter().getRouter()
+
 const JwtRouter = require('./routes/jwt.router')
 const jwtRouter = new JwtRouter().getRouter()
 
@@ -98,6 +101,7 @@ const main = async () => {
         { path: '/api/carts', router: cartsRouter },
         { path: '/', router: viewsRouter },
         { path: '/api/sessions', router: sessionRouter },
+        { path: '/api/users', router: usersRouter },
         { path: '/api', router: jwtRouter }
     ]
 

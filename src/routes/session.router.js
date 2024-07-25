@@ -4,7 +4,6 @@ const passport = require('passport')
 // const authorizationMiddleware = require('../utils/authorizationMiddleware')
 const { SessionController } = require('../controllers/session.controller')
 const Router = require('./router')
-const uploader = require('../utils/uploaderFiles')
 
 const withController = callback => {
     return (req, res) => {                       
@@ -42,9 +41,8 @@ class SessionRouter extends Router {
 
         this.get('/mockingusers', withController((controller, req, res) => controller.mockingUsers(req, res)))  
         
-        this.put('/premium/:uid', withController((controller, req, res) => controller.changeRole(req, res)))
-
-        this.post('/:uid/documents', uploader.array('documents'), withController((controller, req, res) => controller.uploadDocuments(req, res)))
+        //this.put('/premium/:uid', withController((controller, req, res) => controller.changeRole(req, res)))
+        
     }
 }
 
