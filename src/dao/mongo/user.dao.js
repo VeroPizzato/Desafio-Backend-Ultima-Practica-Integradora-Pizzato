@@ -147,7 +147,7 @@ class UserDAO {
             user.status = 'uploaded'
             //user.status = 'updated'
             const result = await UserModel.updateOne({ _id: userId }, { $set: { documents: user.documents, status: user.status } })
-            console.log(result)
+            console.log(user)
             if (result) {            
                 return res.sendSuccess(`${user} actualizado`)
                 //res.status(200).send('Documentos subidos y estado del usuario actualizado')
