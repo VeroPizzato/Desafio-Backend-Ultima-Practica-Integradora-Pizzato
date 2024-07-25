@@ -161,7 +161,7 @@ class UserDAO {
                 // })
             }
         }
-        catch (err) {
+        catch (err) {         
             return res.sendServerError(err)
             //res.status(500).send('Error al subir los documentos: ' + err.message)
         }
