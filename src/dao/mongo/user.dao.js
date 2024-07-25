@@ -128,33 +128,39 @@ class UserDAO {
             console.error(err)
             return false
         }
-    }   
+    }
 
     async updateUserDocuments(userId, files) {
-        const user = await this.getUserById(userId)
-        //if (!user) return res.status(404).send('Usuario no encontrado')
-        if (!user) throw new Error('Usuario no encontrado')        
+        try {
+            const user = await this.getUserById(userId)
+            //if (!user) return res.status(404).send('Usuario no encontrado')
+            if (!user) throw new Error('Usuario no encontrado')
 
-        files.forEach(file => {
-            const document = {
-                name: file.originalname,
-                reference: file.path
-            };
-            user.documents.push(document)
-        })
+            files.forEach(file => {
+                const document = {
+                    name: file.originalname,
+                    reference: file.path
+                };
+                user.documents.push(document)
+            })
 
-        user.status = 'uploaded'
-        const result = await UserModel.updateOne({ _id: userId }, { $set: { documents: user.documents, status: user.status } })
-        if (result) {
-            return res.sendSuccess(`${user} actualizado`)
-            // res.status(200).json({
-            //     message: `${user} actualizado`
-            // })
-        } else {
-            return res.sendUserError('Se produjo un error al intentar actualizar el usuario')
-            // res.status(400).json({
-            //     error: 'Se produjo un error al intentar actualizar el usuario'
-            // })
+            user.status = 'uploaded'
+            const result = await UserModel.updateOne({ _id: userId }, { $set: { documents: user.documents, status: user.status } })
+            if (result) {
+                return res.sendSuccess(`${user} actualizado`)
+                //res.status(200).send('Documentos subidos y estado del usuario actualizado')
+                // res.status(200).json({
+                //     message: `${user} actualizado`
+                // })
+            } else {
+                return res.sendUserError('Se produjo un error al intentar actualizar el usuario')
+                // res.status(400).json({
+                //     error: 'Se produjo un error al intentar actualizar el usuario'
+                // })
+            }
+        }
+        catch (err) {
+            res.status(500).send('Error al subir los documentos: ' + err.message)
         }
     }
 }

@@ -186,7 +186,11 @@ class SessionController {
     async uploadDocuments(req, res) {
         const idUser = req.params.uid
         //const {name, type} = req.body        
-        const files = req.files        
+        const files = req.files
+        if (!files || files.length === 0) {
+            return res.sendUserError('No se subieron archivos')
+            //return res.status(400).send('No se subieron archivos')
+        }        
         const user = await this.service.uploadDocuments(idUser, files)
         req.logger.info('Documentación actualizada exitosamente')
         res.sendCreatedSuccess('Documento actualizado de forma correcta')
