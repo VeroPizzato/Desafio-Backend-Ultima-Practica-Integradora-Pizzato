@@ -247,7 +247,8 @@ describe('Testing Ecommerce', () => {
         it('endpoint PUT /premium/:uid => debe permitir cambiar el rol a un usuario', async () => {
             // change rol to PREMIUM
             const userId = loginUserStatus.body.payload
-            const userPremiumStatus = await requester.put(`/api/sessions/premium/${userId.toString()}`)
+            const userPremiumStatus = await requester.put(`/api/users/premium/${userId.toString()}`)
+            //const userPremiumStatus = await requester.put(`/api/sessions/premium/${userId.toString()}`)
                                 
             expect(userPremiumStatus.statusCode).to.be.equal(200)
             expect(userPremiumStatus.ok).to.be.true
