@@ -1,4 +1,5 @@
 const multer = require('multer')
+const path = require('path')
 
 // configuramos multer. Usamos diskStorage para almacenar los archivos en el disco
 // destination debe ser una función que recibe req (request), file (archivo luego de ser procesado por multer) y cb (callback que debe llamarse para indicar el directorio del archivo)
@@ -6,11 +7,11 @@ const multer = require('multer')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {        
         if (req.body.type === 'profile') {
-            cb(null, `${__dirName}/../../public/profiles`)
+            cb(null, path.join(__dirname, '/../../public/profiles'))
         } else if (req.body.type === 'product') {
-            cb(null, `${__dirName}/../../public/products`)
+            cb(null, path.join(__dirname, '/../../public/products'))
         } else if (req.body.type === 'document') {
-            cb(null, `${__dirName}/../../public/documents`)
+            cb(null, path.join(__dirname, '/../../public/documents'))
         }  
     },
     filename: function (req, file, cb) {      
